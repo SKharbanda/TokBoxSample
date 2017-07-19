@@ -35,7 +35,7 @@ app.get('/gettoken', function (req, res) {
    })
 
 
-app.get('/home',function(req, res){
+app.get('/',function(req, res){
 
     fs.readFile('Opentokclient.html',function (err, data){
 
@@ -46,10 +46,7 @@ app.get('/home',function(req, res){
     });
 
 })
-
-
-
-          var server = app.listen(8081, function () {
+          var server = app.listen(process.env.PORT || 5000, function () {
 
           var host = server.address().address
           var port = server.address().port
