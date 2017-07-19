@@ -56,12 +56,10 @@
 <title>Insert title here</title>
 <script language="javascript" type="text/javascript">
 
-
-
 var url='/getsessionid';
 var url1='/gettoken';
 
-var ajaxRequest;  // The variable that makes Ajax possible!
+var ajaxRequest;  
 var ajaxDisplay;
 
 
@@ -69,17 +67,13 @@ var apiKey = '45631912';
 var Token =false;
 var SessionID =false;
 
-//<!-- 
-//Browser Support Code
 function ajaxFunction(){
    
    try{
              // Opera 8.0+, Firefox, Safari
             ajaxRequest = new XMLHttpRequest();
    }
-   catch (e)
-   {
-      
+   catch (e){
       // Internet Explorer Browsers
       try{
 
@@ -97,8 +91,6 @@ function ajaxFunction(){
          }
 
       catch (e){
-         
-          // Something went wrong
              alert("Your browser broke!");
              return false;
 
@@ -106,14 +98,16 @@ function ajaxFunction(){
       }
    }
  
-   // Create a function that will receive data
-   // sent from the server and will update
-   // div section in the same page.
    ajaxRequest.onreadystatechange = function(){
    
          if(ajaxRequest.readyState == 4){
          ajaxDisplay = ajaxRequest.responseText; 
          console.log("Data received ="+ ajaxDisplay);    
+		 if(SessionID==null){
+			savesessionid();
+		 }else{
+			savetoken();
+		 }
       }
    }
  }  
@@ -137,30 +131,21 @@ function gettoken() {
 
 function savesessionid(){
          SessionID=ajaxDisplay;
-         alert ("Now press Get Token");
-       //SessionID = SessionID.slice(0, -1);
-       //SessionID="'"+SessionID+"'";
-   
+        // alert ("Now press Get Token");
          document.getElementById('ajaxDiv').innerHTML = SessionID;
 }
 
 
 function savetoken(){
-
          Token=ajaxDisplay;
-         alert ("Now press Connect");
-      // Token = Token.slice(0, -2);
-       //Token = "'"+Token+"'";
-
+         //alert ("Now press Connect");
          document.getElementById('ajaxDiv1').innerHTML = Token;
    
 }
-//-->
+
 </script>
     
     <script charset="utf-8">
-    //var session  = OT.initSession(apiKey, SessionID);
-
     var publisher;
 	var session;
     var connectionCount=0; 
