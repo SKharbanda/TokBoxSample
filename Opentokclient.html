@@ -103,7 +103,7 @@ function ajaxFunction(){
          if(ajaxRequest.readyState == 4){
          ajaxDisplay = ajaxRequest.responseText; 
          console.log("Data received ="+ ajaxDisplay);    
-		 if(SessionID==null){
+		 if(SessionID==null ){
 			savesessionid();
 		 }else{
 			savetoken();
@@ -114,18 +114,20 @@ function ajaxFunction(){
    // Now get the value from user and pass it to
    // server script.
 function getsessionid() {
+		SessionID=null;
         ajaxFunction(); 
+		console.log('Retrieving sessionid...please wait');
         ajaxRequest.open("GET", url, true);
         ajaxRequest.send(null);
-        alert ("Now press save SessionID");
+        //alert ("Now press save SessionID");
      }
 function gettoken() {
 
          ajaxFunction();
- 
+		console.log('Retrieving Token...please wait');
          ajaxRequest.open("GET", url1, true);
          ajaxRequest.send(null);
-         alert ("Now press save Token");
+         //alert ("Now press save Token");
 }
 
 
@@ -271,10 +273,9 @@ function savetoken(){
        <h1>Welcome to Opentok Demo </h1><br /><br />
        <!--Please Specify Room: <input type='text' id='room' /> <br />-->
        <input type='button' onclick='getsessionid()' value='Get Session Id'/>
-       <input type='button' onclick='savesessionid()' value='Save Session Id'/>
+       
        <input type='button' onclick='gettoken()' value='Get Token'/>
-       <input type='button' onclick='savetoken()' value='Save Token'/>
-
+      
 </form>  <br /><br />
 
 <div id='ajaxDiv'>Session Id</div><br />
