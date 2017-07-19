@@ -1,11 +1,11 @@
 {
-  "name": "Opentok_Sample",
+  "name": "OpentokSample",
   "version": "1.0.0",
   "description": "Tokbox Opentok Sample",
-  "main": "opentokserver.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "opentokserver.js"
+    "start": "server.js"
   },
   "author": "Shubham Kharbanda",
   "license": "ISC",
