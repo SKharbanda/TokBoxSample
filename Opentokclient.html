@@ -162,10 +162,11 @@ function savetoken(){
     //var session  = OT.initSession(apiKey, SessionID);
 
     var publisher;
+	var session;
     var connectionCount=0; 
     function Connect(){
     
-            var session  = OT.initSession(apiKey, SessionID);
+            session  = OT.initSession(apiKey, SessionID);
 			
 			session.on({
 			connectionCreated: function(event) {
