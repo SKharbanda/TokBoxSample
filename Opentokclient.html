@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    <script src="https://static.opentok.com/v2/js/opentok.js" charset="utf-8"> </script>\
+
+
+<style>
+
+
+        .OT_publisher
+           {
+
+            position: fixed !important;
+            right: 0px !important;
+            bottom:0px !important;
+
+           }
+
+        .OT_subscriber
+            {
+
+            width: 20% !important;
+            float:left !important;
+
+           }
+        
+     div.footer 
+
+          {
+
+           position:fixed;
+           left:10px;
+           bottom:40px;
+           height:40px;
+           width:100%;
+           background:white;
+
+         }
+
+
+#kharbanda
+
+         {
+
+            position: fixed !important;
+            right: 0px !important;
+            bottom:0px !important;
+    
+         }
+
+</style>
+    
+    
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+<script language="javascript" type="text/javascript">
+
+
+
+var url='/getsessionid';
+var url1='/gettoken';
+
+var ajaxRequest;  // The variable that makes Ajax possible!
+var ajaxDisplay;
+
+
+var apiKey = '45631912';
+var Token =false;
+var SessionID =false;
+
+//<!-- 
+//Browser Support Code
+function ajaxFunction(){
+   
+   try{
+             // Opera 8.0+, Firefox, Safari
+            ajaxRequest = new XMLHttpRequest();
+   }
+   catch (e)
+   {
+      
+      // Internet Explorer Browsers
+      try{
+
+             ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+
+      }
+
+      catch (e) {
+         
+         try{
+
+             ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+
+
+         }
+
+      catch (e){
+         
+          // Something went wrong
+             alert("Your browser broke!");
+             return false;
+
+         }
+      }
+   }
+ 
+   // Create a function that will receive data
+   // sent from the server and will update
+   // div section in the same page.
+   ajaxRequest.onreadystatechange = function(){
+   
+         if(ajaxRequest.readyState == 4){
+         ajaxDisplay = ajaxRequest.responseText; 
+         console.log("Data received ="+ ajaxDisplay);    
+      }
+   }
+ }  
+   // Now get the value from user and pass it to
+   // server script.
+function getsessionid() {
+        ajaxFunction(); 
+        ajaxRequest.open("GET", url, true);
+        ajaxRequest.send(null);
+        alert ("Now press save SessionID");
+     }
+function gettoken() {
+
+         ajaxFunction();
+ 
+         ajaxRequest.open("GET", url1, true);
+         ajaxRequest.send(null);
+         alert ("Now press save Token");
+}
+
+
+function savesessionid(){
+         SessionID=ajaxDisplay;
+         alert ("Now press Get Token");
+       //SessionID = SessionID.slice(0, -1);
+       //SessionID="'"+SessionID+"'";
+   
+         document.getElementById('ajaxDiv').innerHTML = SessionID;
+}
+
+
+function savetoken(){
+
+         Token=ajaxDisplay;
+         alert ("Now press Connect");
+      // Token = Token.slice(0, -2);
+       //Token = "'"+Token+"'";
+
+         document.getElementById('ajaxDiv1').innerHTML = Token;
+   
+}
+//-->
+</script>
+    
+    <script charset="utf-8">
+    //var session  = OT.initSession(apiKey, SessionID);
+
+    var publisher;
+    var connectionCount=0; 
+    function Connect(){
+    
+            var session  = OT.initSession(apiKey, SessionID);
+			
+			session.on({
+			connectionCreated: function(event) {
+				connectionCount++;
+				console.log("Connection created ="+connectionCount);
+				document.getElementById("target").innerHTML = connectionCount;
+				document.getElementById("disconnect").disabled = false;
+				document.getElementById("publish").disabled = false;
+
+				if (event.connection.connectionId !== session.connection.connectionId) {
+
+					console.log('Another client connected. ' + connectionCount + 'in total.');
+					console.log(event.connection.connectionId);
+				}
+				if (event.connection.connectionId === session.connection.connectionId){
+					console.log('You connected');
+				console.log(event.connection.connectionId);
+				}
+				},
+			connectionDestroyed: function connectionDestroyedHandler(event) {
+				console.log('A client disconnected. ');
+			},
+			sessionDisconnected: function(event) {
+
+				connectionCount--;
+				document.getElementById("target").innerHTML = connectionCount;
+				console.log('A client disconnected. ' + connectionCount + ' total.');
+				console.log('A client disconnected. ');
+			},
+			streamCreated: function(event) {
+				session.subscribe(event.stream);
+				console.log("stream id is : ",event.stream.streamId);
+			}
+				
+			
+			});
+		
+            session.connect(Token, function(error) {
+			if (error){
+				    console.log("Error connecting: ", error.name, error.message);
+		     }
+			
+			else {
+				    console.log("Connected to the session.");
+				   // document.getElementById("publish").disabled = false;
+				    //document.getElementById("disconnect").disabled = false;
+		  	}
+    });
+	}  
+    
+    function Disconnect(){
+
+		  document.getElementById("disconnect").disabled = true;
+          document.getElementById("publish").disabled = true;
+          document.getElementById("unpublish").disabled = true;
+          session.disconnect();          
+      
+      }  
+     
+    function Publish(){
+
+    var publisherOptions = {
+
+        insertMode: 'append',
+        name: 'Shubham',
+        style: {buttonDisplayMode: 'on'}};
+
+
+
+    publisher = OT.initPublisher('kharbanda',publisherOptions);
+         session.publish(publisher);      
+         document.getElementById("unpublish").disabled = false;
+         publisher.on({
+         accessAllowed: function (event) {
+         // The user has granted access to the camera and mic.
+         alert("User Granted Access");},
+
+         accessDenied: function accessDeniedHandler(event) {
+         // The user has denied access to the camera and mic.\
+         alert("User Didn't Grant Access");
+
+
+     }
+
+});
+
+        publisher.on("streamDestroyed", function (event) {
+        console.log("The publisher stopped streaming. Reason: " + event.reason);
+        alert("publisher unpublished");
+
+    });
+
+ }  
+    
+    
+ function Unpublish(){
+   
+        session.unpublish(publisher);        
+        document.getElementById("unpublish").disabled = true;
+
+    }  
+	
+	
+    
+  
+    
+</script>
+    
+</head>
+
+
+
+<body>
+
+<form name='myForm'>
+   
+       <h1>Welcome to Opentok Demo </h1><br /><br />
+       <!--Please Specify Room: <input type='text' id='room' /> <br />-->
+       <input type='button' onclick='getsessionid()' value='Get Session Id'/>
+       <input type='button' onclick='savesessionid()' value='Save Session Id'/>
+       <input type='button' onclick='gettoken()' value='Get Token'/>
+       <input type='button' onclick='savetoken()' value='Save Token'/>
+
+</form>  <br /><br />
+
+<div id='ajaxDiv'>Session Id</div><br />
+<div id='ajaxDiv1'>Token Id</div><br /><br />
+
+      <button onclick="Connect()" id="connect">Connect </button>
+      <button onclick="Publish()" id="publish" disabled="true">Publish </button>
+      <button onclick="Disconnect()" id="disconnect" disabled="true">Disconnect </button>
+      <button onclick="Unpublish()" id="unpublish" disabled="true">Unpublish </button>
+
+
+<div class="footer" >
+
+      <p><span style="color:blue">User's Connected</span><p>
+
+<p id="target"></p>
+
+</div>
+
+<div id="kharbanda"></div>
+
+</body>
+</html>
