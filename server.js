@@ -7,7 +7,7 @@ var session1 = '';
 app.get('/getsessionid', function (req, res) {
 
    var OpenTok = require('opentok'),
-   opentok = new OpenTok('45631912', 'ab40bd3c873ac61a56b82cb3d309d1023f5968ee'); 
+   opentok = new OpenTok('45919192', 'e29c0347a340de1e6712284a517fe3f107e17dc2'); 
    console.log("I'm going to check the value of sessionid:"+session1);
    
     if(!session1){
@@ -34,7 +34,7 @@ app.get('/gettoken', function (req, res) {
 
    var OpenTok = require('opentok'),
 
-            opentok = new OpenTok('45631912', 'ab40bd3c873ac61a56b82cb3d309d1023f5968ee'); 
+            opentok = new OpenTok('45919192', 'e29c0347a340de1e6712284a517fe3f107e17dc2'); 
             token = opentok.generateToken(session1);
 				
 				    console.log('\n\nYOUR Token is:-'+token); 
