@@ -6,19 +6,27 @@ var session1 = '';
 
 app.get('/getsessionid', function (req, res) {
 
-
    var OpenTok = require('opentok'),
+   opentok = new OpenTok('45631912', 'ab40bd3c873ac61a56b82cb3d309d1023f5968ee'); 
+   console.log("I'm going to check the value of sessionid:"+session1);
+   
+    if(!session1){
+		console.log('\nSession not created for the user. Going to create one...');
+		
+		opentok.createSession({mediaMode:'routed', archiveMode:'always'},function(err, session) {
 
-            opentok = new OpenTok('45631912', 'ab40bd3c873ac61a56b82cb3d309d1023f5968ee'); 
-            opentok.createSession(function(err, session) {
+			if (err) 
+				return console.log("Error while creating the sessionid:" +err);
+			session1 = session.sessionId;
+			console.log('Your Session Id is:-'+session1);
 
-				    if (err) return console.log(err);
-					  session1 = session.sessionId;
-					  console.log('YOUR Session ID is:-'+session1);
-
-					  res.end( session1);
+			res.end( session1);
       
-   });
+		});
+	}else{
+		console.log('\nSession already created for the user. Using the existing one...');
+		res.end( session1);
+	}           
 
 })
 
